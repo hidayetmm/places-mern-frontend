@@ -1,0 +1,51 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .switch {
+    flex-direction: row-reverse;
+
+    label {
+      padding-right: 12px;
+      padding-left: 0;
+    }
+
+    span {
+      vertical-align: middle;
+    }
+  }
+}
+
+.userMenu {
+  span {
+    vertical-align: middle;
+  }
+}
+
+.placeModalInputs {
+  .textInput {
+    width: 100%;
+  }
+}
+
+.imageIcon {
+  span {
+    transform: scale(1.7);
+  }
+}
+
+.image {
+  position: relative;
+  border: 2px dashed #5c5f66;
+  img {
+    max-height: 90%;
+    max-width: 90%;
+    transition: filter 150ms;
+  }
+  &:hover {
+    img {
+      filter: brightness(30%);
+    }
+  }
+}
