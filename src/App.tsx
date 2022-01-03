@@ -15,7 +15,7 @@ import Footer from "./components/Footer/Footer";
 import UserProfile from "./containers/UserProfile/UserProfile";
 
 function App() {
-  Axios.defaults.baseURL = "http://localhost:7070/api/";
+  Axios.defaults.baseURL = process.env.REACT_APP_SERVER_LINK;
 
   const storedUserData = localStorage.getItem("userData");
 
