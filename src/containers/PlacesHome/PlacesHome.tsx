@@ -10,10 +10,11 @@ import {
   Col,
   useMantineTheme,
   Avatar,
+  Modal,
 } from "@mantine/core";
 import classes from "./PlacesHome.module.scss";
 import axios, { AxiosResponse, AxiosError } from "axios";
-import { useEffect, useContext, useRef } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { useNotifications } from "@mantine/notifications";
 import { AuthContext, Place } from "../../context/AuthContext";
 import { spring } from "react-flip-toolkit";
@@ -21,6 +22,8 @@ import { Link } from "react-router-dom";
 
 const PlacesHome = () => {
   const { places, setPlaces, fetchPlacesToggle } = useContext(AuthContext);
+  const [isModalOpened, setIsModalOpened] = useState(false);
+
   const theme = useMantineTheme();
   const notifications = useNotifications();
   const secondaryColor =
@@ -66,10 +69,12 @@ const PlacesHome = () => {
     } catch (err: AxiosError | any) {
       if (axios.isAxiosError(err)) {
         console.log(err?.response);
-        notifications.showNotification({
-          message: err.response?.data.message,
-          color: "red",
-        });
+        if (err.response?.data.message) {
+          notifications.showNotification({
+            message: err.response?.data.message,
+            color: "red",
+          });
+        }
       } else {
         notifications.showNotification({
           message: err?.message,
@@ -151,10 +156,64 @@ const PlacesHome = () => {
                 color="blue"
                 fullWidth
                 style={{ marginTop: 14 }}
+                onClick={() => setIsModalOpened(true)}
               >
                 View
               </Button>
             </Card>
+            <Modal
+              centered
+              opened={isModalOpened}
+              onClose={() => setIsModalOpened(false)}
+            >
+              <Card shadow="sm" padding="lg">
+                <Card.Section>
+                  <Image
+                    src={process.env.REACT_APP_SERVER_LINK + place.image}
+                    height={180}
+                    alt={place.title}
+                    fit="contain"
+                  />
+                </Card.Section>
+                <Group
+                  position="apart"
+                  style={{ marginBottom: 5, marginTop: theme.spacing.sm }}
+                >
+                  <Text weight={500}>{place.title}</Text>
+                  <Badge
+                    styles={{ root: { padding: "0 4px", cursor: "pointer" } }}
+                    color="pink"
+                    variant="light"
+                    leftSection={<BadgeAvatar imgUrl={place.creator.image} />}
+                    component={Link}
+                    to={`${place.creator.name}`}
+                  >
+                    {place.creator.name}
+                  </Badge>
+                </Group>
+                <Text
+                  lineClamp={3}
+                  size="sm"
+                  style={{
+                    color: secondaryColor,
+                    lineHeight: 1.5,
+                    minHeight: 65,
+                    maxHeight: 65,
+                  }}
+                >
+                  {place.description}
+                </Text>
+                <Text
+                  lineClamp={1}
+                  size="xs"
+                  style={{
+                    color: secondaryColor,
+                  }}
+                >
+                  {place.address}
+                </Text>
+              </Card>
+            </Modal>
           </Col>
         ))}
       </Grid>
