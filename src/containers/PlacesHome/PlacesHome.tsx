@@ -158,7 +158,7 @@ const PlacesHome = () => {
                 style={{ marginTop: 14 }}
                 onClick={() => setIsModalOpened(true)}
               >
-                View
+                View more
               </Button>
             </Card>
             <Modal
