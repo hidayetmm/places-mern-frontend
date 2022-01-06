@@ -6,6 +6,8 @@ import reportWebVitals from "./reportWebVitals";
 import ThemeProvider from "./ThemeProvider";
 import { BrowserRouter } from "react-router-dom";
 import { NotificationsProvider } from "@mantine/notifications";
+import "leaflet/dist/leaflet.css";
+import "leaflet/dist/leaflet";
 
 ReactDOM.render(
   <React.StrictMode>

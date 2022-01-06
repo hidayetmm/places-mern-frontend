@@ -11,6 +11,7 @@ import {
   useMantineTheme,
   Avatar,
   Modal,
+  Center,
 } from "@mantine/core";
 import classes from "./PlacesHome.module.scss";
 import axios, { AxiosResponse, AxiosError } from "axios";
@@ -19,6 +20,20 @@ import { useNotifications } from "@mantine/notifications";
 import { AuthContext, Place } from "../../context/AuthContext";
 import { spring } from "react-flip-toolkit";
 import { Link } from "react-router-dom";
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import Leaflet, { LatLngExpression } from "leaflet";
+
+import icon from "leaflet/dist/images/marker-icon.png";
+import iconShadow from "leaflet/dist/images/marker-shadow.png";
+import iconRetina from "leaflet/dist/images/marker-icon-2x.png";
+
+let DefaultIcon = Leaflet.icon({
+  ...Leaflet.Icon.Default.prototype.options,
+  iconUrl: icon,
+  iconRetinaUrl: iconRetina,
+  shadowUrl: iconShadow,
+});
+Leaflet.Marker.prototype.options.icon = DefaultIcon;
 
 const PlacesHome = () => {
   const { places, setPlaces, fetchPlacesToggle } = useContext(AuthContext);
@@ -95,6 +110,8 @@ const PlacesHome = () => {
       />
     );
   };
+
+  const position: LatLngExpression = [51.505, -0.09];
 
   return (
     <Container className={classes.container} size="xl">
@@ -212,6 +229,37 @@ const PlacesHome = () => {
                 >
                   {place.address}
                 </Text>
+                <div
+                  style={{
+                    height: 200,
+                    border: "1px solid yellow",
+                  }}
+                >
+                  <MapContainer
+                    center={[
+                      Number(place.location.lat),
+                      Number(place.location.lng),
+                    ]}
+                    zoom={13}
+                    scrollWheelZoom={false}
+                    style={{ height: 200 }}
+                  >
+                    <TileLayer
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                    <Marker
+                      position={[
+                        Number(place.location.lat),
+                        Number(place.location.lng),
+                      ]}
+                    >
+                      <Popup>
+                        A pretty CSS3 popup. <br /> Easily customizable.
+                      </Popup>
+                    </Marker>
+                  </MapContainer>
+                </div>
               </Card>
             </Modal>
           </Col>
